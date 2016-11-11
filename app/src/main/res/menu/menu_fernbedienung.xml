@@ -3,8 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="remote.js.nzse.hda.makeremotesgreatagain.Fernbedienung">
     <item
+        android:id="@+id/action_favorite"
+        android:title="Test"
+        android:icon="@drawable/aspect_ratio"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:title="Senderliste anpassen"
+        android:orderInCategory="100" />
+    <item
+        android:title="Rolle wählen"
+        android:orderInCategory="101" />
+    <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="102"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>

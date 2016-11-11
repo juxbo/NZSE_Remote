@@ -17,111 +17,242 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:weightSum="1"
+        android:id="@+id/remote_overview"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1">
+            android:layout_height="0dp"
+            android:weightSum="1"
+            android:layout_weight="0.18"
+            android:id="@+id/sender">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="133dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
                     android:text="Sender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView4" />
+                    android:id="@+id/textView4"
+                    android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+                    android:textAlignment="center" />
 
-                <Spinner
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinner"
-                    android:entries="@array/senderliste" />
+                    android:layout_height="match_parent">
+
+                    <Spinner
+                        android:layout_width="177dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/spinner"
+                        android:entries="@array/senderliste" />
+
+                    <ImageButton
+                        android:src="@drawable/arrow_down"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:src="@drawable/arrow_up"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button2"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <Button
-                android:text="Last"
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/button"
-                android:layout_weight="0.06" />
-
-            <Button
-                android:text="Next"
-                android:layout_width="61dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/button2"
-                android:layout_weight="0.09" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="@dimen/space_weight" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:id="@+id/volume"
+            android:layout_weight="0.18">
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Button
-                    android:text="Stumm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button5"
-                    android:layout_weight="1" />
-
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="267dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <TextView
                         android:text="Lautstaerke"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView8" />
+                        android:id="@+id/textView8"
+                        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+                        android:textAlignment="center" />
 
-                    <SeekBar
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/seekBar2" />
+                        android:layout_height="match_parent">
+
+                        <ImageButton
+                            android:src="@drawable/mute"
+                            android:layout_width="75dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/button5" />
+
+                        <SeekBar
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/seekBar2"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="@dimen/space_weight" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:id="@+id/timeshift"
+            android:layout_weight="0.17">
 
-            <Button
-                android:text="Zurueck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:src="@drawable/rewind"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:id="@+id/button3"
                 android:layout_weight="1" />
 
-            <Button
-                android:text="Play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:src="@drawable/pause"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:id="@+id/button4"
                 android:layout_weight="1" />
 
-            <Button
-                android:text="VOR"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:src="@drawable/fastforward"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:id="@+id/button6"
                 android:layout_weight="1" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="@dimen/space_weight" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:weightSum="1"
+            android:layout_weight="0.28"
+            android:id="@+id/pip"
+            android:background="@drawable/custom_border">
+
+            <Switch
+                android:text="Bildschrim aufteilen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch2"
+                android:checked="false"
+                android:splitTrack="false"
+                android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"
+                android:textColor="#fff"
+                android:textAlignment="center" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.68">
+
+                    <TextView
+                        android:text="Bild tauschen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView3"
+                        android:fontFamily="sans-serif"
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        android:textColor="#fff" />
+
+                    <ImageButton
+                        android:src="@drawable/pip_swap"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button7" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="142dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.13">
+
+                    <TextView
+                        android:text="Sender zweites Bild"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView2"
+                        android:textAlignment="center"
+                        android:textColor="#fff" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageButton
+                            android:src="@drawable/arrow_down"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/button9"
+                            android:layout_weight="0.37" />
+
+                        <ImageButton
+                            android:src="@drawable/arrow_up"
+                            android:layout_width="71dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/button8"
+                            android:layout_weight="0.03" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
