@@ -52,22 +52,25 @@
                     <Spinner
                         android:layout_width="177dp"
                         android:layout_height="match_parent"
-                        android:id="@+id/spinner"
+                        android:id="@+id/spinner_sender"
                         android:entries="@array/senderliste" />
-
-                    <ImageButton
-                        android:src="@drawable/arrow_down"
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/button"
-                        android:layout_weight="1" />
 
                     <ImageButton
                         android:src="@drawable/arrow_up"
                         android:layout_width="61dp"
                         android:layout_height="match_parent"
                         android:id="@+id/button2"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:onClick="lastChannelButtonPressed" />
+
+                    <ImageButton
+                        android:src="@drawable/arrow_down"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button"
+                        android:layout_weight="1"
+                        android:onClick="nextChannelButtonPressed" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -113,12 +116,13 @@
                             android:src="@drawable/mute"
                             android:layout_width="75dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/button5" />
+                            android:id="@+id/button_mute"
+                            android:onClick="muteButtonPressed" />
 
                         <SeekBar
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:id="@+id/seekBar2"
+                            android:id="@+id/bar_volume"
                             android:layout_weight="1" />
                     </LinearLayout>
 
@@ -149,8 +153,9 @@
                 android:src="@drawable/pause"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:id="@+id/button4"
-                android:layout_weight="1" />
+                android:id="@+id/button_play"
+                android:layout_weight="1"
+                android:onClick="playButtonPressed" />
 
             <ImageButton
                 android:src="@drawable/fastforward"
@@ -234,18 +239,18 @@
                         android:layout_weight="1">
 
                         <ImageButton
-                            android:src="@drawable/arrow_down"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:id="@+id/button9"
-                            android:layout_weight="0.37" />
-
-                        <ImageButton
                             android:src="@drawable/arrow_up"
                             android:layout_width="71dp"
                             android:layout_height="match_parent"
                             android:id="@+id/button8"
                             android:layout_weight="0.03" />
+
+                        <ImageButton
+                            android:src="@drawable/arrow_down"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/button9"
+                            android:layout_weight="0.37" />
                     </LinearLayout>
 
                 </LinearLayout>

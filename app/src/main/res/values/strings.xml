@@ -2,8 +2,11 @@
     <string name="app_name">MakeRemotesGreatAgain</string>
     <string name="action_settings">Settings</string>
     <string-array name="senderliste">
-        <item>1. Ard</item>
+        <!-- TODO: The numbers shouldn't be in here. (Do we even need numbers?) -->
+        <item>1. ARD</item>
         <item>2. ZDF</item>
         <item>3. AMK</item>
+        <item>4. BibelTV</item>
+        <item>5. Langersendername</item>
     </string-array>
 </resources>
