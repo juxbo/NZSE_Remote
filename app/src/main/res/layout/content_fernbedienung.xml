@@ -49,11 +49,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <Spinner
+                   <!-- <Spinner
                         android:layout_width="177dp"
                         android:layout_height="match_parent"
                         android:id="@+id/spinner_sender"
-                        android:entries="@array/senderliste" />
+                        android:entries="@array/senderliste" /> -->
+                    <Spinner
+                        android:layout_width="177dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/spinner_sender" />
 
                     <ImageButton
                         android:src="@drawable/arrow_up"
