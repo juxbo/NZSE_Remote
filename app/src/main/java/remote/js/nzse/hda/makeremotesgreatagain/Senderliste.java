@@ -8,25 +8,26 @@ import java.util.List;
  */
 
 public class Senderliste {
-    private static ArrayList<Sender> sender=new ArrayList<>();
+    private static List<Sender> sender;
 
-    public Senderliste(){
-        setSender(new ArrayList<Sender>());
+    public Senderliste() {
+        sender = new ArrayList<>();
         fillSenderListWithTestData();
     }
 
-    private void fillSenderListWithTestData(){
-        getSender().add(new Sender(1,"ARD"));
-        getSender().add(new Sender(2,"ZDF"));
-        getSender().add(new Sender(3,"BibelTV"));
-        getSender().add(new Sender(4,"AMKTVLangersendername"));
+    private void fillSenderListWithTestData() {
+        // Sender(channel, program, quality, frequency, provider)
+        sender.add(new Sender("1", "ZDF", 58, 546000, "ZDFmobil"));
+        sender.add(new Sender("2", "Das Erste", 91, 602000, "ARD"));
+        sender.add(new Sender("3", "hr-fernsehen", 91, 658000, "SWR"));
+        sender.add(new Sender("4", "arte", 91, 602000, "ARD"));
     }
 
-    public ArrayList<Sender> getSender() {
+    public List<Sender> getSender() {
         return sender;
     }
 
-    public void setSender(ArrayList<Sender> sender) {
+    public void setSender(List<Sender> sender) {
         this.sender = sender;
     }
 }

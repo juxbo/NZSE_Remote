@@ -6,16 +6,25 @@ import java.io.Serializable;
  * Created by jux on 11.11.2016.
  */
 
-public class Sender implements Serializable{
-    private int number;
-    private String title;
+public class Sender implements Serializable {
+    private String channel;
+    private String program;
+    private int quality;
+    private int frequency;
+    private String provider;
 
-    public Sender(final int nr,final String tit){
-        number=nr;
-        title=tit;
+    public Sender(final String channel, final String program, final int quality, final int frequency, final String provider) {
+        this.channel = channel;
+        this.program = program;
+        this.quality = quality;
+        this.frequency = frequency;
+        this.provider = provider;
     }
+
     @Override
-    public String toString(){
-        return this.number+". "+this.title;
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(channel).append(". ").append(program);
+        return sb.toString();
     }
 }
