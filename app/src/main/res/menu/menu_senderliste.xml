@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="remote.js.nzse.hda.makeremotesgreatagain.SenderlisteActivity">
+
+    <item
+        android:id="@+id/action_scan"
+        android:title="Nach Sendern suchen"
+        app:showAsAction="ifRoom"/>
+</menu>

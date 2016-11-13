@@ -3,8 +3,6 @@ package remote.js.nzse.hda.makeremotesgreatagain;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,15 +17,16 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Fernbedienung extends AppCompatActivity {
 
+    public static final String IPAdress = "192.168.178.43";
     private Spinner sender;
     private SeekBar vol;
     private boolean muted=false;
     private int volCache=50;
     private boolean paused=false;
+    private boolean blackbars=true;
     private Senderliste sliste;
     private HttpCommandWrapper cmd;
 
@@ -40,19 +39,16 @@ public class Fernbedienung extends AppCompatActivity {
 
         System.setProperty("java.net.preferIPv4Stack" , "true");
 
-        //Not really sure if we should do this or just always call findViewById if we need one of these
         sender=(Spinner) findViewById(R.id.spinner_sender);
         sliste=new Senderliste();
-        ArrayList<Sender> test=new ArrayList<>();
-        test.add(new Sender("1", "ZDF", 58, 546000, "ZDFmobil"));
-        sliste.setSender(test);
-        ArrayAdapter senderAdapter = new ArrayAdapter(this, R.layout.spinner, sliste.getSender());
+        ArrayAdapter senderAdapter = new ArrayAdapter(this, R.layout.custom_spinner, sliste.getSender());
         sender.setAdapter(senderAdapter);
 
         vol=(SeekBar) findViewById(R.id.bar_volume);
         vol.setProgress(volCache);
 
-        cmd = new HttpCommandWrapper("fe80::1c67:b59:b9a1:a97");
+        cmd = new HttpCommandWrapper(IPAdress);
+        cmd.setStandBy(false);
     }
 
     @Override
@@ -73,6 +69,8 @@ public class Fernbedienung extends AppCompatActivity {
         switch(id){
             case R.id.action_changeAspectRatio:
                 Toast.makeText(this, "Change aspect ratio", Toast.LENGTH_SHORT).show();
+                blackbars = !blackbars;
+                cmd.showBlackBars(blackbars);
                 break;
             case R.id.action_changeRole:
                 Toast.makeText(this, "Change role", Toast.LENGTH_SHORT).show();
@@ -81,7 +79,7 @@ public class Fernbedienung extends AppCompatActivity {
             case R.id.action_openSenderliste:
                 Toast.makeText(this, "Open Senderliste", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), SenderlisteActivity.class);
-                //intent.putExtra("sliste", sliste.getSender());
+                intent.putExtra("sliste", (ArrayList) sliste.getSender());
                 startActivity(intent);
                 break;
             default:
@@ -122,10 +120,13 @@ public class Fernbedienung extends AppCompatActivity {
         if(paused){
             Toast.makeText(this, "Resuming", Toast.LENGTH_SHORT).show();
             ((ImageButton)findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.pause));
+            //TODO: WTF is Offset?
+            cmd.play(500);
             paused=false;
         }else{
             Toast.makeText(this, "Pausing", Toast.LENGTH_SHORT).show();
             ((ImageButton)findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.play));
+            cmd.pause();
             paused=true;
         }
     }
@@ -162,6 +163,7 @@ public class Fernbedienung extends AppCompatActivity {
             vol.setEnabled(true);
             vol.setProgress(volCache);
             ((ImageButton)findViewById(R.id.button_mute)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.mute));
+            cmd.setVolume(volCache);
             muted=false;
         }else{
             //Mute
@@ -169,6 +171,7 @@ public class Fernbedienung extends AppCompatActivity {
             vol.setProgress(0);
             vol.setEnabled(false);
             ((ImageButton)findViewById(R.id.button_mute)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.unmute));
+            cmd.setVolume(0);
             muted=true;
         }
     }

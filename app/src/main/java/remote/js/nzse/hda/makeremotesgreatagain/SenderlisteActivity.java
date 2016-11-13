@@ -2,6 +2,12 @@ package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -9,16 +15,54 @@ import java.util.ArrayList;
 public class SenderlisteActivity extends AppCompatActivity {
 
     private ArrayList<Sender> senderliste;
-
+    private ListView sender;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_senderliste);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarSenderliste);
+        setSupportActionBar(toolbar);
+
         senderliste=(ArrayList<Sender>)getIntent().getSerializableExtra("sliste");
 
-        //TODO: Make some sort of list view with buttons and stuff using the senderliste arraylist
-        for(Sender s:senderliste){
-            Toast.makeText(this, s.toString(), Toast.LENGTH_LONG).show();
+        sender=(ListView) findViewById(R.id.listview_sender);
+        ArrayAdapter senderAdapter = new ArrayAdapter(this,R.layout.custom_listview, R.id.listview_textView, senderliste);
+        sender.setAdapter(senderAdapter);
+
+        //TODO: Somehow get the pressed buttons in the listview
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_senderliste, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch(id){
+            case R.id.action_scan:
+                Toast.makeText(this, "Scan", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onDeleteRowButtonClicked(View v){
+        Toast.makeText(this, "Clicked some Delete Button", Toast.LENGTH_SHORT).show();
+//        final int position = sender.getPositionForView((View) v.getParent());
+//        datalist.remove(position);
+//        myAdapter.notifyDataSetChanged();
     }
 }
