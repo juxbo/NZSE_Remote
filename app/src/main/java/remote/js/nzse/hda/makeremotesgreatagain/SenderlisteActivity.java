@@ -51,6 +51,7 @@ public class SenderlisteActivity extends AppCompatActivity {
         switch(id){
             case R.id.action_scan:
                 Toast.makeText(this, "Scan", Toast.LENGTH_SHORT).show();
+                //TODO: Implement channel scan
                 break;
             default:
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -71,7 +72,11 @@ public class SenderlisteActivity extends AppCompatActivity {
         final int position = sender.getPositionForView((View) v.getParent());
         Sender s = senderliste.get(position);
         senderliste.remove(position);
-        senderliste.add(position - 1, s);
+        if(position <= 0){
+               senderliste.add(senderliste.size(),s);
+        }else {
+            senderliste.add(position - 1, s);
+        }
         senderAdapter.notifyDataSetChanged();
     }
 
@@ -79,7 +84,11 @@ public class SenderlisteActivity extends AppCompatActivity {
         final int position = sender.getPositionForView((View) v.getParent());
         Sender s = senderliste.get(position);
         senderliste.remove(position);
-        senderliste.add(position + 1, s);
+        if(position >= senderliste.size()){
+            senderliste.add(0,s);
+        }else {
+            senderliste.add(position + 1, s);
+        }
         senderAdapter.notifyDataSetChanged();
     }
 }
