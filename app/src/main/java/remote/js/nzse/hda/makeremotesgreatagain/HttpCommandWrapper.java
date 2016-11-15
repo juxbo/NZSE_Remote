@@ -59,7 +59,7 @@ public class HttpCommandWrapper {
         execute(param, 500);
     }
 
-    public void play(final int offset) {
+    public void play(final long offset) {
         String param = "timeShiftPlay=" + offset;
         execute(param, 500);
     }

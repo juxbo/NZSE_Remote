@@ -1,15 +1,6 @@
 <resources>
     <string name="app_name">GreatRemote</string>
     <string name="action_settings">Settings</string>
-    <!-- Not used anymore -->
-    <string-array name="senderliste">
-        <!-- TODO: The numbers shouldn't be in here. (Do we even need numbers?) -->
-        <item>1. ARD</item>
-        <item>2. ZDF</item>
-        <item>3. AMK</item>
-        <item>4. BibelTV</item>
-        <item>5. Langersendername</item>
-    </string-array>
     <string name="title_activity_senderliste">Settings</string>
 
     <!-- Strings related to Settings -->

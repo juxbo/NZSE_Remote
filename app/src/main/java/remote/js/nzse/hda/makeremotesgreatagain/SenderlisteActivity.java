@@ -29,7 +29,7 @@ public class SenderlisteActivity extends AppCompatActivity {
         ArrayAdapter senderAdapter = new ArrayAdapter(this,R.layout.custom_listview, R.id.listview_textView, senderliste);
         sender.setAdapter(senderAdapter);
 
-        //TODO: Somehow get the pressed buttons in the listview
+        //TODO: Somehow find out what button has been pressed (which line of listview)
     }
 
     @Override

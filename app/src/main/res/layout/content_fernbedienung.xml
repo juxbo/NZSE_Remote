@@ -49,11 +49,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                   <!-- <Spinner
-                        android:layout_width="177dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/spinner_sender"
-                        android:entries="@array/senderliste" /> -->
                     <Spinner
                         android:layout_width="177dp"
                         android:layout_height="match_parent"
@@ -150,8 +145,10 @@
                 android:src="@drawable/rewind"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:id="@+id/button3"
-                android:layout_weight="1" />
+                android:id="@+id/button_rewind"
+                android:layout_weight="1"
+                android:onClick="rewindButtonPressed"
+                android:enabled="false" />
 
             <ImageButton
                 android:src="@drawable/pause"
@@ -165,8 +162,10 @@
                 android:src="@drawable/fastforward"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:id="@+id/button6"
-                android:layout_weight="1" />
+                android:id="@+id/button_ff"
+                android:layout_weight="1"
+                android:onClick="ffButtonPressed"
+                android:enabled="false" />
         </LinearLayout>
 
         <Space
@@ -187,7 +186,7 @@
                 android:text="Bildschrim aufteilen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/switch2"
+                android:id="@+id/switch_pip"
                 android:checked="false"
                 android:splitTrack="false"
                 android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"
@@ -203,7 +202,8 @@
                     android:orientation="vertical"
                     android:layout_width="110dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.68">
+                    android:layout_weight="0.68"
+                    android:id="@+id/layout_pipSwap">
 
                     <TextView
                         android:text="Bild tauschen"
@@ -219,14 +219,16 @@
                         android:src="@drawable/pip_swap"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/button7" />
+                        android:id="@+id/button_pipswap"
+                        android:onClick="pipSwapButtonPressed" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="142dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.13">
+                    android:layout_weight="0.13"
+                    android:id="@+id/layout_pipChannel">
 
                     <TextView
                         android:text="Sender zweites Bild"
@@ -246,15 +248,17 @@
                             android:src="@drawable/arrow_up"
                             android:layout_width="71dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/button8"
-                            android:layout_weight="0.03" />
+                            android:id="@+id/button_piplast"
+                            android:layout_weight="0.03"
+                            android:onClick="pipLastChannelButtonPressed" />
 
                         <ImageButton
                             android:src="@drawable/arrow_down"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/button9"
-                            android:layout_weight="0.37" />
+                            android:id="@+id/button_pipnext"
+                            android:layout_weight="0.37"
+                            android:onClick="pipNextChannelButtonPressed" />
                     </LinearLayout>
 
                 </LinearLayout>
