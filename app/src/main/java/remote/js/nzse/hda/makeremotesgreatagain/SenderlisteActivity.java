@@ -16,6 +16,7 @@ public class SenderlisteActivity extends AppCompatActivity {
 
     private ArrayList<Sender> senderliste;
     private ListView sender;
+    private ArrayAdapter senderAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +27,7 @@ public class SenderlisteActivity extends AppCompatActivity {
         senderliste=(ArrayList<Sender>)getIntent().getSerializableExtra("sliste");
 
         sender=(ListView) findViewById(R.id.listview_sender);
-        ArrayAdapter senderAdapter = new ArrayAdapter(this,R.layout.custom_listview, R.id.listview_textView, senderliste);
+        this.senderAdapter = new ArrayAdapter(this,R.layout.custom_listview, R.id.listview_textView, senderliste);
         sender.setAdapter(senderAdapter);
 
         //TODO: Somehow find out what button has been pressed (which line of listview)
@@ -61,8 +62,24 @@ public class SenderlisteActivity extends AppCompatActivity {
 
     public void onDeleteRowButtonClicked(View v){
         Toast.makeText(this, "Clicked some Delete Button", Toast.LENGTH_SHORT).show();
-//        final int position = sender.getPositionForView((View) v.getParent());
-//        datalist.remove(position);
-//        myAdapter.notifyDataSetChanged();
+        final int position = sender.getPositionForView((View) v.getParent());
+        senderliste.remove(position);
+        senderAdapter.notifyDataSetChanged();
+    }
+
+    public void onArrowUpClicked(View v) {
+        final int position = sender.getPositionForView((View) v.getParent());
+        Sender s = senderliste.get(position);
+        senderliste.remove(position);
+        senderliste.add(position - 1, s);
+        senderAdapter.notifyDataSetChanged();
+    }
+
+    public void onArrowDownClicked(View v) {
+        final int position = sender.getPositionForView((View) v.getParent());
+        Sender s = senderliste.get(position);
+        senderliste.remove(position);
+        senderliste.add(position + 1, s);
+        senderAdapter.notifyDataSetChanged();
     }
 }
