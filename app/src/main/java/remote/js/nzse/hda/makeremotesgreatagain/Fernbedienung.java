@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class Fernbedienung extends AppCompatActivity {
 
-    public static final String IPAdress = "192.168.178.43";
+    public static final String IPAdress = "192.168.178.123";
     private static final int SPULEN_BY =10;
     private Spinner sender;
     private SeekBar vol;
@@ -48,8 +48,6 @@ public class Fernbedienung extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        System.setProperty("java.net.preferIPv4Stack" , "true");
-
         //Somehow these cannot be disabled in xml (They're not greyed out)
         ffBtn=(ImageButton) findViewById(R.id.button_ff);
         rewindBtn=(ImageButton) findViewById(R.id.button_rewind);
@@ -61,7 +59,7 @@ public class Fernbedienung extends AppCompatActivity {
 
         sender=(Spinner) findViewById(R.id.spinner_sender);
         sliste=new Senderliste();
-        ArrayAdapter senderAdapter = new ArrayAdapter(this, R.layout.custom_spinner, sliste.getSender());
+        ArrayAdapter<Sender> senderAdapter = new ArrayAdapter<>(this, R.layout.custom_spinner, sliste.getSender());
         sender.setAdapter(senderAdapter);
 
         sender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -73,17 +71,16 @@ public class Fernbedienung extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                return;
             }
         });
 
         vol=(SeekBar) findViewById(R.id.bar_volume);
         vol.setProgress(volCache);
         vol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            private int i;
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                //This generates a lot of httpRequests
-                cmd.setVolume(i);
+                this.i = i;
             }
 
             @Override
@@ -93,7 +90,7 @@ public class Fernbedienung extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                //Not necessary
+                cmd.setVolume(i);
             }
         });
 
@@ -101,13 +98,8 @@ public class Fernbedienung extends AppCompatActivity {
         pipSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    cmd.setPipEnabled(true);
-                    setPipButtonsEnabled(true);
-                }else{
-                    cmd.setPipEnabled(false);
-                    setPipButtonsEnabled(false);
-                }
+                    cmd.setPipEnabled(b);
+                    setPipButtonsEnabled(b);
             }
         });
 
