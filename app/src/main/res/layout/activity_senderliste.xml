@@ -20,7 +20,6 @@ tools:context="remote.js.nzse.hda.makeremotesgreatagain.SenderlisteActivity">
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -49,5 +48,18 @@ tools:context="remote.js.nzse.hda.makeremotesgreatagain.SenderlisteActivity">
                 android:layout_height="match_parent"
                 android:id="@+id/listview_sender" />
         </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <!--android:background="#CC3F3F3F"-->
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

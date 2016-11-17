@@ -1,7 +1,9 @@
 package remote.js.nzse.hda.makeremotesgreatagain;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +32,14 @@ public class SenderlisteActivity extends AppCompatActivity {
         this.senderAdapter = new ArrayAdapter(this,R.layout.custom_listview, R.id.listview_textView, senderliste);
         sender.setAdapter(senderAdapter);
 
-        //TODO: Somehow find out what button has been pressed (which line of listview)
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), Fernbedienung.class);
+        intent.putExtra("sliste", senderliste);
+        startActivity(intent);
     }
 
     @Override
@@ -50,8 +59,7 @@ public class SenderlisteActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.action_scan:
-                Toast.makeText(this, "Scan", Toast.LENGTH_SHORT).show();
-                //TODO: Implement channel scan
+                scanChannels();
                 break;
             default:
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -59,6 +67,48 @@ public class SenderlisteActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void scanChannels() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPostExecute(Void result) {
+                Toast.makeText(getApplicationContext(), "Sendersuchlauf abgeschlossen", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                        //The hacky way:
+                        Intent intent = new Intent(getApplicationContext(), SenderlisteActivity.class);
+                        intent.putExtra("sliste", senderliste);
+                        startActivity(intent);
+
+                        //The actual way? (Wouldn't work like this yet)
+//                        senderAdapter = new ArrayAdapter(getApplicationContext(),R.layout.custom_listview, R.id.listview_textView, senderliste);
+//                        sender.setAdapter(senderAdapter);
+                    }
+                });
+            }
+
+            @Override
+            protected void onPreExecute() {
+                Toast.makeText(getApplicationContext(), "Sendersuchlauf gestartet", Toast.LENGTH_SHORT).show();
+                findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                clearList();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                HttpCommandWrapper commandWrapper = new HttpCommandWrapper(Fernbedienung.IP_ADRESS);
+                //XXX: TODO: We have a List problem ...
+                senderliste = (ArrayList<Sender>) commandWrapper.scanChannels();
+                return null;
+            }
+        }.execute();
+    }
+
+    private void clearList() {
+        senderliste.clear();
+        senderAdapter.notifyDataSetChanged();
     }
 
     public void onDeleteRowButtonClicked(View v){

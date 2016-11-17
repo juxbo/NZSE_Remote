@@ -2,10 +2,12 @@ package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,9 +67,24 @@ public class HttpCommandWrapper {
     }
 
     public List<Sender> scanChannels() {
+        //@Selim: Pls fix I don't know how to Json
         String param = "scanChannels=";
-        execute(param, 5000);
-        return Collections.emptyList();
+        List<Sender> toReturn = new ArrayList<>();
+        JSONObject senderJson = executeJSON(param, 5000);
+        if (senderJson != null) {
+            try {
+                JSONArray senderArray = senderJson.getJSONArray("channels");
+                if (senderArray != null) {
+                    for (int i = 0; i < senderArray.length(); i++) {
+                        JSONObject channelObject = senderArray.getJSONObject(i);
+                        toReturn.add(new Sender(channelObject.getString("channel"), channelObject.getString("program"), channelObject.getInt("quality"), channelObject.getInt("frequency"), channelObject.getString("provider")));
+                    }
+                }
+            } catch (JSONException e) {
+                Log.e("Senderliste", e.getMessage());
+            }
+        }
+        return toReturn;
     }
 
     public void setStandBy(final boolean value) {
@@ -83,4 +100,16 @@ public class HttpCommandWrapper {
             Log.e("Fernbedienung", e.getMessage());
         }
     }
+
+    private JSONObject executeJSON(String param, int timeout) {
+        JSONObject toRet = null;
+        HttpRequest request = new HttpRequest(host, timeout, true);
+        try {
+            toRet = request.execute(param);
+        } catch (JSONException | IOException e) {
+            Log.e("Fernbedienung", e.getMessage());
+        }
+        return toRet;
+    }
+
 }

@@ -7,24 +7,24 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fernbedienung extends AppCompatActivity {
 
-    public static final String IPAdress = "192.168.178.123";
+    public static final String IP_ADRESS = "192.168.178.43";
     private static final int SPULEN_BY =10;
     private Spinner sender;
     private SeekBar vol;
@@ -59,6 +59,10 @@ public class Fernbedienung extends AppCompatActivity {
 
         sender=(Spinner) findViewById(R.id.spinner_sender);
         sliste=new Senderliste();
+        List<Sender> slistFromIntent = (ArrayList<Sender>) getIntent().getSerializableExtra("sliste");
+        if (slistFromIntent != null && !slistFromIntent.isEmpty()) {
+            sliste.setSender(slistFromIntent);
+        }
         ArrayAdapter<Sender> senderAdapter = new ArrayAdapter<>(this, R.layout.custom_spinner, sliste.getSender());
         sender.setAdapter(senderAdapter);
 
@@ -103,7 +107,7 @@ public class Fernbedienung extends AppCompatActivity {
             }
         });
 
-        cmd = new HttpCommandWrapper(IPAdress);
+        cmd = new HttpCommandWrapper(IP_ADRESS);
         cmd.setDebug(true);
         cmd.setStandBy(false);
         cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
@@ -112,11 +116,13 @@ public class Fernbedienung extends AppCompatActivity {
     private void setPipButtonsEnabled(final boolean enabled) {
         pipChannelNr=0;
         if(enabled){
-            findViewById(R.id.layout_pipSwap).setVisibility(LinearLayout.VISIBLE);
-            findViewById(R.id.layout_pipChannel).setVisibility(LinearLayout.VISIBLE);
+            findViewById(R.id.layout_mainPip).setVisibility(View.VISIBLE);
+            findViewById(R.id.layout_pipSwap).setVisibility(View.VISIBLE);
+            findViewById(R.id.layout_pipChannel).setVisibility(View.VISIBLE);
         }else{
-            findViewById(R.id.layout_pipSwap).setVisibility(LinearLayout.GONE);
-            findViewById(R.id.layout_pipChannel).setVisibility(LinearLayout.GONE);
+            findViewById(R.id.layout_mainPip).setVisibility(View.GONE);
+            findViewById(R.id.layout_pipSwap).setVisibility(View.GONE);
+            findViewById(R.id.layout_pipChannel).setVisibility(View.GONE);
         }
 
         findViewById(R.id.button_piplast).setEnabled(enabled);
