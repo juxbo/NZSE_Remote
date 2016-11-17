@@ -2,6 +2,7 @@ package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +27,7 @@ public class Fernbedienung extends AppCompatActivity {
 
     public static final String IP_ADRESS = "192.168.178.43";
     private static final int SPULEN_BY =10;
+    private SharedPreferences prefs = null;
     private Spinner sender;
     private SeekBar vol;
     private boolean muted=false;
@@ -47,6 +49,8 @@ public class Fernbedienung extends AppCompatActivity {
         setContentView(R.layout.activity_fernbedienung);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        prefs = getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE);
 
         //Somehow these cannot be disabled in xml (They're not greyed out)
         ffBtn=(ImageButton) findViewById(R.id.button_ff);
@@ -153,19 +157,18 @@ public class Fernbedienung extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //TODO: Check if connection can still be established
-
-        //not sure about this
-        cmd.setDebug(true);
-        cmd.setStandBy(false);
-        //TODO: Find a way to save lastChannelNr (ATM it gets reset to its initial value (i.e. 0))
-        cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
+        if (prefs.getBoolean("firstrun", true)) {
+            //Open Rollenauswahl on first run
+            showChangeRoleSpinner();
+            prefs.edit().putBoolean("firstrun", false).commit();
+        }
+        //TODO: Pretty much the only thing to do. Finish onResume and OnPause to save and get the data we need to save to enable smooth multitasking
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //TODO: Find out what to do here
+        //TODO: Find out what to do here (See onResume)
     }
 
 
@@ -209,10 +212,11 @@ public class Fernbedienung extends AppCompatActivity {
     }
 
     //This might be a bit overkill.
+    //TODO: Fix bug: When you miss the Dialog it doesn't go into "default:" and instead just dismisses the dialog
     private void showChangeRoleSpinner(){
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Was beschreibt sie am Besten?");
-        String[] types = {"Kind", "Renter","Hausfrau","Fernsehnutzer","Nerd","Pro","Heimkino Enthusiast","Lass mich in Ruhe","Ich will nur Fernsehn schauen","Ich weiß nicht"};
+        String[] types = {"Kind", "Renter", "Hausfrau", "Fernsehnutzer", "Technik Profi", "Heimkino Enthusiast", "Ich weiß nicht"};
         b.setItems(types, new DialogInterface.OnClickListener() {
 
             @Override
@@ -225,14 +229,16 @@ public class Fernbedienung extends AppCompatActivity {
                     case 2:
                     case 3:
                         //Rolle noob
+                        findViewById(R.id.pip).setVisibility(View.GONE);
                         break;
                     case 4:
                     case 5:
-                    case 6:
                         //Rolle pro
+                        findViewById(R.id.pip).setVisibility(View.VISIBLE);
                         break;
                     default:
                         //Keine Rolle. Noob benutzen?
+                        findViewById(R.id.pip).setVisibility(View.GONE);
                         break;
                 }
             }
