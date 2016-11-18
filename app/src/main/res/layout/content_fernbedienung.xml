@@ -25,10 +25,10 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
             android:weightSum="1"
-            android:layout_weight="0.18"
-            android:id="@+id/sender">
+            android:layout_weight="0.2"
+            android:id="@+id/sender"
+            android:layout_height="0dp">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -86,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/volume"
-            android:layout_weight="0.18">
+            android:layout_weight="0.2">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -139,7 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/timeshift"
-            android:layout_weight="0.17">
+            android:layout_weight="0.2">
 
             <ImageButton
                 android:src="@drawable/rewind"
@@ -155,7 +155,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:id="@+id/button_play"
-                android:layout_weight="1"
+                android:layout_weight="0.99"
                 android:onClick="playButtonPressed" />
 
             <ImageButton
@@ -178,7 +178,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:weightSum="1"
-            android:layout_weight="0.28"
+            android:layout_weight="0.3"
             android:id="@+id/pip"
             android:background="@drawable/custom_border">
 

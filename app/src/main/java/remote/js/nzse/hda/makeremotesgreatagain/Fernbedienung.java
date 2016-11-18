@@ -50,7 +50,7 @@ public class Fernbedienung extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        prefs = getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE);
+        prefs = getSharedPreferences("remote.js.nzse.hda.greatremote", MODE_PRIVATE);
 
         //Somehow these cannot be disabled in xml (They're not greyed out)
         ffBtn=(ImageButton) findViewById(R.id.button_ff);
@@ -249,7 +249,6 @@ public class Fernbedienung extends AppCompatActivity {
     }
 
     public void playButtonPressed(View v){
-        //TODO: Implement Play/Pause Function and enable ff/rewind buttons only when paused before
         if(paused){
             Toast.makeText(this, "Resuming", Toast.LENGTH_SHORT).show();
             ((ImageButton)findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.pause));
