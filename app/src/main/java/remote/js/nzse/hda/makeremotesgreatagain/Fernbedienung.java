@@ -25,7 +25,7 @@ import java.util.List;
 
 public class Fernbedienung extends AppCompatActivity {
 
-    public static final String IP_ADRESS = "192.168.178.43";
+    public static final String IP_ADRESS = "192.168.56.1";
     private static final int SPULEN_BY =10;
     private SharedPreferences prefs = null;
     private Spinner sender;
@@ -111,7 +111,7 @@ public class Fernbedienung extends AppCompatActivity {
             }
         });
 
-        cmd = new HttpCommandWrapper(IP_ADRESS);
+        cmd = new HttpCommandWrapper(IP_ADRESS, this);
         cmd.setDebug(true);
         cmd.setStandBy(false);
         cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
@@ -162,6 +162,7 @@ public class Fernbedienung extends AppCompatActivity {
             showChangeRoleSpinner();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
+        cmd.setStandBy(false);
         //TODO: Pretty much the only thing to do. Finish onResume and OnPause to save and get the data we need to save to enable smooth multitasking
     }
 

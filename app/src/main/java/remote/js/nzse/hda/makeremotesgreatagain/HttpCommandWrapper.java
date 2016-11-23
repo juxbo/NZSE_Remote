@@ -1,6 +1,8 @@
 package remote.js.nzse.hda.makeremotesgreatagain;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,9 +18,11 @@ import java.util.List;
 
 public class HttpCommandWrapper {
     private final String host;
+    private final Context context;
 
-    public HttpCommandWrapper(String host) {
+    public HttpCommandWrapper(String host, Context context) {
         this.host = host;
+        this.context = context;
     }
 
     public void setDebug(final boolean debug) {
@@ -97,6 +101,7 @@ public class HttpCommandWrapper {
         try {
             request.execute(param);
         } catch (JSONException | IOException e) {
+            Toast.makeText(context, "Fehler beim Verbinden mit TV", Toast.LENGTH_LONG);
             Log.e("Fernbedienung", e.getMessage());
         }
     }

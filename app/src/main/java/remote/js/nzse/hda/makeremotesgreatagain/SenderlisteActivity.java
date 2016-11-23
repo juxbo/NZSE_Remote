@@ -98,7 +98,7 @@ public class SenderlisteActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                HttpCommandWrapper commandWrapper = new HttpCommandWrapper(Fernbedienung.IP_ADRESS);
+                HttpCommandWrapper commandWrapper = new HttpCommandWrapper(Fernbedienung.IP_ADRESS, getApplicationContext());
                 //XXX: TODO: We have a List problem ...
                 senderliste = (ArrayList<Sender>) commandWrapper.scanChannels();
                 return null;
