@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Selim on 13.11.2016.
  */
 
-public class HttpCommandWrapper extends AsyncTask<String, Integer, Void> {
+public class HttpCommandWrapper extends AsyncTask<String, Integer, JSONObject> {
     private final String host;
     private final Context context;
 
@@ -75,7 +75,7 @@ public class HttpCommandWrapper extends AsyncTask<String, Integer, Void> {
         //@Selim: Pls fix I don't know how to Json
         String param = "scanChannels=";
         List<Sender> toReturn = new ArrayList<>();
-        JSONObject senderJson = executeJSON(param, 5000);
+        JSONObject senderJson = execute(param, 5000);
         if (senderJson != null) {
             try {
                 JSONArray senderArray = senderJson.getJSONArray("channels");
@@ -97,31 +97,21 @@ public class HttpCommandWrapper extends AsyncTask<String, Integer, Void> {
         execute(param, 500);
     }
 
-    private void execute(String param, int timeout) {
+    private JSONObject execute(String param, int timeout) {
 
-        doInBackground(param, String.valueOf(timeout));
-    }
-
-    private JSONObject executeJSON(String param, int timeout) {
-        JSONObject toRet = null;
-        HttpRequest request = new HttpRequest(host, timeout, true);
-        try {
-            toRet = request.execute(param);
-        } catch (JSONException | IOException e) {
-            Log.e("Fernbedienung", e.getMessage());
-        }
-        return toRet;
+        return doInBackground(param, String.valueOf(timeout));
     }
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected JSONObject doInBackground(String... params) {
         HttpRequest request = new HttpRequest(host, Integer.parseInt(params[1]), true);
+        JSONObject response = null;
         try {
-            request.execute(params[0]);
+            response = request.execute(params[0]);
         } catch (JSONException | IOException e) {
             Toast.makeText(context, "Fehler beim Verbinden mit TV", Toast.LENGTH_LONG);
             Log.e("Fernbedienung", e.getMessage());
         }
-        return null;
+        return response;
     }
 }
