@@ -92,7 +92,7 @@ public class HttpRequest {
         if (ipAddress == null || ipAddress.isEmpty())
             throw new IllegalArgumentException("IP address is undefined " + parameters);
         URL url = new URL("http", ipAddress, 80, "tv?" + parameters);
-        Log.i("HttpRequest", url.toString());
+        Log.i(getClass().getSimpleName(), url.toString());
 
 
         // to be done:

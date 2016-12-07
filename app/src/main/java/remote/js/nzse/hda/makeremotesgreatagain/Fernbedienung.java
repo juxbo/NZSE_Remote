@@ -25,15 +25,15 @@ import java.util.List;
 
 public class Fernbedienung extends AppCompatActivity {
 
-    public static final String IP_ADRESS = "192.168.56.1";
-    private static final int SPULEN_BY =10;
+    public static final String IP_ADRESS = "192.168.178.123";
+    private static final int SPULEN_BY = 10;
     private SharedPreferences prefs = null;
     private Spinner sender;
     private SeekBar vol;
-    private boolean muted=false;
-    private int volCache=50;
-    private boolean paused=false;
-    private boolean blackbars=true;
+    private boolean muted = false;
+    private int volCache = 50;
+    private boolean paused = false;
+    private boolean blackbars = true;
     private Senderliste sliste;
     private HttpCommandWrapper cmd;
     private int lastChannelNr;
@@ -53,16 +53,16 @@ public class Fernbedienung extends AppCompatActivity {
         prefs = getSharedPreferences("remote.js.nzse.hda.greatremote", MODE_PRIVATE);
 
         //Somehow these cannot be disabled in xml (They're not greyed out)
-        ffBtn=(ImageButton) findViewById(R.id.button_ff);
-        rewindBtn=(ImageButton) findViewById(R.id.button_rewind);
+        ffBtn = (ImageButton) findViewById(R.id.button_ff);
+        rewindBtn = (ImageButton) findViewById(R.id.button_rewind);
         ffBtn.setEnabled(false);
         rewindBtn.setEnabled(false);
         setPipButtonsEnabled(false);
 
-        lastChannelNr=0;
+        lastChannelNr = 0;
 
-        sender=(Spinner) findViewById(R.id.spinner_sender);
-        sliste=new Senderliste();
+        sender = (Spinner) findViewById(R.id.spinner_sender);
+        sliste = new Senderliste();
         List<Sender> slistFromIntent = (ArrayList<Sender>) getIntent().getSerializableExtra("sliste");
         if (slistFromIntent != null && !slistFromIntent.isEmpty()) {
             sliste.setSender(slistFromIntent);
@@ -73,7 +73,7 @@ public class Fernbedienung extends AppCompatActivity {
         sender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                lastChannelNr=position;
+                lastChannelNr = position;
                 cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
             }
 
@@ -82,10 +82,11 @@ public class Fernbedienung extends AppCompatActivity {
             }
         });
 
-        vol=(SeekBar) findViewById(R.id.bar_volume);
+        vol = (SeekBar) findViewById(R.id.bar_volume);
         vol.setProgress(volCache);
         vol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private int i;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 this.i = i;
@@ -102,12 +103,12 @@ public class Fernbedienung extends AppCompatActivity {
             }
         });
 
-        Switch pipSwitch = (Switch)findViewById(R.id.switch_pip);
+        Switch pipSwitch = (Switch) findViewById(R.id.switch_pip);
         pipSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    cmd.setPipEnabled(b);
-                    setPipButtonsEnabled(b);
+                cmd.setPipEnabled(b);
+                setPipButtonsEnabled(b);
             }
         });
 
@@ -118,12 +119,12 @@ public class Fernbedienung extends AppCompatActivity {
     }
 
     private void setPipButtonsEnabled(final boolean enabled) {
-        pipChannelNr=0;
-        if(enabled){
+        pipChannelNr = 0;
+        if (enabled) {
             findViewById(R.id.layout_mainPip).setVisibility(View.VISIBLE);
             findViewById(R.id.layout_pipSwap).setVisibility(View.VISIBLE);
             findViewById(R.id.layout_pipChannel).setVisibility(View.VISIBLE);
-        }else{
+        } else {
             findViewById(R.id.layout_mainPip).setVisibility(View.GONE);
             findViewById(R.id.layout_pipSwap).setVisibility(View.GONE);
             findViewById(R.id.layout_pipChannel).setVisibility(View.GONE);
@@ -134,21 +135,23 @@ public class Fernbedienung extends AppCompatActivity {
         findViewById(R.id.button_pipswap).setEnabled(enabled);
     }
 
-    public void pipSwapButtonPressed(View v){
-        int temp=lastChannelNr;
-        lastChannelNr=pipChannelNr;
-        pipChannelNr=temp;
+    public void pipSwapButtonPressed(View v) {
+        int temp = lastChannelNr;
+        lastChannelNr = pipChannelNr;
+        pipChannelNr = temp;
 
         cmd.setChannelPip(sliste.findSenderByNumber(pipChannelNr).getChannel());
         cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
     }
-    public void pipNextChannelButtonPressed(View v){
+
+    public void pipNextChannelButtonPressed(View v) {
         pipChannelNr++;
         cmd.setChannelPip(sliste.findSenderByNumber(pipChannelNr).getChannel());
     }
-    public void pipLastChannelButtonPressed(View v){
+
+    public void pipLastChannelButtonPressed(View v) {
         pipChannelNr--;
-        if(pipChannelNr<0) {
+        if (pipChannelNr < 0) {
             pipChannelNr = sliste.getSender().size();
         }
         cmd.setChannelPip(sliste.findSenderByNumber(pipChannelNr).getChannel());
@@ -188,7 +191,7 @@ public class Fernbedienung extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id){
+        switch (id) {
             case R.id.action_changeAspectRatio:
                 Toast.makeText(this, "Change aspect ratio", Toast.LENGTH_SHORT).show();
                 blackbars = !blackbars;
@@ -214,7 +217,7 @@ public class Fernbedienung extends AppCompatActivity {
 
     //This might be a bit overkill.
     //TODO: Fix bug: When you miss the Dialog it doesn't go into "default:" and instead just dismisses the dialog
-    private void showChangeRoleSpinner(){
+    private void showChangeRoleSpinner() {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Was beschreibt sie am Besten?");
         String[] types = {"Kind", "Renter", "Hausfrau", "Fernsehnutzer", "Technik Profi", "Heimkino Enthusiast", "Ich weiß nicht"};
@@ -224,7 +227,7 @@ public class Fernbedienung extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //TODO: Change this to correct roles. Hide the features a role shouldn't have
                 dialog.dismiss();
-                switch(which){
+                switch (which) {
                     case 0:
                     case 1:
                     case 2:
@@ -249,54 +252,55 @@ public class Fernbedienung extends AppCompatActivity {
         b.show();
     }
 
-    public void playButtonPressed(View v){
-        if(paused){
+    public void playButtonPressed(View v) {
+        if (paused) {
             Toast.makeText(this, "Resuming", Toast.LENGTH_SHORT).show();
-            ((ImageButton)findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.pause));
+            ((ImageButton) findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause));
             cmd.play(calculateOffset(spulenOffset));
             ffBtn.setEnabled(false);
             rewindBtn.setEnabled(false);
-            paused=false;
-        }else{
+            paused = false;
+        } else {
             Toast.makeText(this, "Pausing", Toast.LENGTH_SHORT).show();
-            ((ImageButton)findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.play));
+            ((ImageButton) findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.play));
             cmd.pause();
-            timePaused=System.currentTimeMillis();
+            timePaused = System.currentTimeMillis();
             ffBtn.setEnabled(true);
-            paused=true;
+            paused = true;
         }
     }
 
-    public void ffButtonPressed(View v){
-        if(calculateOffset(spulenOffset)> SPULEN_BY){
-            spulenOffset-= SPULEN_BY;
-            Toast.makeText(this, "-"+SPULEN_BY+" => Neuer Offset: "+calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
-            if(calculateOffset(spulenOffset)>= SPULEN_BY){
+    public void ffButtonPressed(View v) {
+        if (calculateOffset(spulenOffset) > SPULEN_BY) {
+            spulenOffset -= SPULEN_BY;
+            Toast.makeText(this, "-" + SPULEN_BY + " => Neuer Offset: " + calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
+            if (calculateOffset(spulenOffset) >= SPULEN_BY) {
                 ffBtn.setEnabled(false);
             }
-            if(calculateOffset(spulenOffset)<calculateOffset(SPULEN_BY)) {
+            if (calculateOffset(spulenOffset) < calculateOffset(SPULEN_BY)) {
                 rewindBtn.setEnabled(true);
             }
         }
     }
-    public void rewindButtonPressed(View v){
-        if(calculateOffset(spulenOffset)<calculateOffset(SPULEN_BY)){
-            spulenOffset+= SPULEN_BY;
-            Toast.makeText(this, "+"+SPULEN_BY+" => Neuer Offset: "+calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
-            if(calculateOffset(spulenOffset)<calculateOffset(0)){
+
+    public void rewindButtonPressed(View v) {
+        if (calculateOffset(spulenOffset) < calculateOffset(SPULEN_BY)) {
+            spulenOffset += SPULEN_BY;
+            Toast.makeText(this, "+" + SPULEN_BY + " => Neuer Offset: " + calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
+            if (calculateOffset(spulenOffset) < calculateOffset(0)) {
                 rewindBtn.setEnabled(false);
             }
-            if(calculateOffset(spulenOffset)> SPULEN_BY) {
+            if (calculateOffset(spulenOffset) > SPULEN_BY) {
                 ffBtn.setEnabled(true);
             }
         }
     }
 
     private long calculateOffset(int spulOffset) {
-        return ((System.currentTimeMillis()-timePaused)/1000)+spulOffset;
+        return ((System.currentTimeMillis() - timePaused) / 1000) + spulOffset;
     }
 
-    public void lastChannelButtonPressed(View v){
+    public void lastChannelButtonPressed(View v) {
         Toast.makeText(this, "Last Channel", Toast.LENGTH_SHORT).show();
         changeSender(-1);
 //        Not necessary after implementing the changeListener of sender spinner
@@ -304,7 +308,7 @@ public class Fernbedienung extends AppCompatActivity {
 //        cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
     }
 
-    public void nextChannelButtonPressed(View v){
+    public void nextChannelButtonPressed(View v) {
         Toast.makeText(this, "Next Channel", Toast.LENGTH_SHORT).show();
         changeSender(1);
 //        Not necessary after implementing the changeListener of sender spinner
@@ -312,34 +316,34 @@ public class Fernbedienung extends AppCompatActivity {
 //        cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
     }
 
-    private void changeSender(int by){
-        if((sender.getSelectedItemPosition()+by)>=sender.getAdapter().getCount() || (sender.getSelectedItemPosition()+by)<0){
-            if(by>0)
+    private void changeSender(int by) {
+        if ((sender.getSelectedItemPosition() + by) >= sender.getAdapter().getCount() || (sender.getSelectedItemPosition() + by) < 0) {
+            if (by > 0)
                 sender.setSelection(0);
             else
-                sender.setSelection(sender.getAdapter().getCount()-1);
-        }else{
-            sender.setSelection(sender.getSelectedItemPosition()+by);
+                sender.setSelection(sender.getAdapter().getCount() - 1);
+        } else {
+            sender.setSelection(sender.getSelectedItemPosition() + by);
         }
     }
 
-    public void muteButtonPressed(View v){
+    public void muteButtonPressed(View v) {
         Toast.makeText(this, "Mute pressed", Toast.LENGTH_SHORT).show();
-        if(muted){
+        if (muted) {
             //Unmute
             vol.setEnabled(true);
             vol.setProgress(volCache);
-            ((ImageButton)findViewById(R.id.button_mute)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.mute));
+            ((ImageButton) findViewById(R.id.button_mute)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.mute));
             cmd.setVolume(volCache);
-            muted=false;
-        }else{
+            muted = false;
+        } else {
             //Mute
-            volCache=vol.getProgress();
+            volCache = vol.getProgress();
             vol.setProgress(0);
             vol.setEnabled(false);
-            ((ImageButton)findViewById(R.id.button_mute)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.unmute));
+            ((ImageButton) findViewById(R.id.button_mute)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unmute));
             cmd.setVolume(0);
-            muted=true;
+            muted = true;
         }
     }
 }

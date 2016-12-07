@@ -1,6 +1,7 @@
 package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by Selim on 13.11.2016.
  */
 
-public class HttpCommandWrapper {
+public class HttpCommandWrapper extends AsyncTask<String, Integer, Void> {
     private final String host;
     private final Context context;
 
@@ -97,13 +98,8 @@ public class HttpCommandWrapper {
     }
 
     private void execute(String param, int timeout) {
-        HttpRequest request = new HttpRequest(host, timeout, true);
-        try {
-            request.execute(param);
-        } catch (JSONException | IOException e) {
-            Toast.makeText(context, "Fehler beim Verbinden mit TV", Toast.LENGTH_LONG);
-            Log.e("Fernbedienung", e.getMessage());
-        }
+
+        doInBackground(param, String.valueOf(timeout));
     }
 
     private JSONObject executeJSON(String param, int timeout) {
@@ -117,4 +113,15 @@ public class HttpCommandWrapper {
         return toRet;
     }
 
+    @Override
+    protected Void doInBackground(String... params) {
+        HttpRequest request = new HttpRequest(host, Integer.parseInt(params[1]), true);
+        try {
+            request.execute(params[0]);
+        } catch (JSONException | IOException e) {
+            Toast.makeText(context, "Fehler beim Verbinden mit TV", Toast.LENGTH_LONG);
+            Log.e("Fernbedienung", e.getMessage());
+        }
+        return null;
+    }
 }
