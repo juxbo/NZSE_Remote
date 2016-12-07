@@ -27,12 +27,13 @@ public class Fernbedienung extends AppCompatActivity {
 
     public static final String IP_ADRESS = "192.168.178.123";
     private static final int SPULEN_BY = 10;
+    boolean on;
     private SharedPreferences prefs = null;
     private Spinner sender;
     private SeekBar vol;
-    private boolean muted = false;
+    private boolean muted;
     private int volCache = 50;
-    private boolean paused = false;
+    private boolean paused;
     private boolean blackbars = true;
     private Senderliste sliste;
     private HttpCommandWrapper cmd;
@@ -166,7 +167,6 @@ public class Fernbedienung extends AppCompatActivity {
             showChangeRoleSpinner();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
-        cmd.setStandBy(false);
         //TODO: Pretty much the only thing to do. Finish onResume and OnPause to save and get the data we need to save to enable smooth multitasking
     }
 
@@ -207,6 +207,15 @@ public class Fernbedienung extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), SenderlisteActivity.class);
                 intent.putExtra("sliste", (ArrayList) sliste.getSender());
                 startActivity(intent);
+                break;
+            case R.id.action_onOff:
+                on = !on;
+                Toast.makeText(this, "TV " + (on ? "On" : "Off"), Toast.LENGTH_SHORT).show();
+
+                if (on)
+                    cmd.setStandBy(true);
+                else
+                    cmd.setStandBy(false);
                 break;
             default:
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
