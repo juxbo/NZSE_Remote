@@ -108,6 +108,7 @@ public class Fernbedienung extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 cmd.setPipEnabled(b);
+                cmd.setChannelPip(sliste.getSender().get(lastChannelNr).getChannel());
                 setPipButtonsEnabled(b);
             }
         });
