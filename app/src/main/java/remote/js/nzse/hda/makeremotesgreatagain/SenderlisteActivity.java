@@ -1,10 +1,12 @@
 package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.content.Intent;
+import android.media.CamcorderProfile;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,13 +14,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SenderlisteActivity extends AppCompatActivity {
 
     private ArrayList<Sender> senderliste;
     private ListView sender;
     private ArrayAdapter senderAdapter;
+    private boolean scanHappening;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +41,7 @@ public class SenderlisteActivity extends AppCompatActivity {
         sender.setAdapter(senderAdapter);
 
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        scanHappening=false;
     }
 
     @Override
@@ -46,6 +55,14 @@ public class SenderlisteActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_senderliste, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(scanHappening){
+            menu.getItem(0).setEnabled(false);
+        }
         return true;
     }
 
@@ -70,6 +87,8 @@ public class SenderlisteActivity extends AppCompatActivity {
     }
 
     private void scanChannels() {
+        scanHappening=true;
+        invalidateOptionsMenu();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPostExecute(Void result) {
@@ -77,30 +96,42 @@ public class SenderlisteActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                        //The hacky way:
                         Intent intent = new Intent(getApplicationContext(), SenderlisteActivity.class);
                         intent.putExtra("sliste", senderliste);
+                        finish();
                         startActivity(intent);
-
-                        //The actual way? (Wouldn't work like this yet)
-//                        senderAdapter = new ArrayAdapter(getApplicationContext(),R.layout.custom_listview, R.id.listview_textView, senderliste);
-//                        sender.setAdapter(senderAdapter);
                     }
                 });
             }
 
             @Override
             protected void onPreExecute() {
-                Toast.makeText(getApplicationContext(), "Sendersuchlauf gestartet", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Sendersuchlauf gestartet", Toast.LENGTH_SHORT).show();
                 findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
-                clearList();
+
             }
 
             @Override
             protected Void doInBackground(Void... voids) {
                 HttpCommandWrapper commandWrapper = new HttpCommandWrapper(Fernbedienung.IP_ADRESS, getApplicationContext());
-                //XXX: TODO: We have a List problem ...
-                senderliste = (ArrayList<Sender>) commandWrapper.scanChannels();
+                try {
+                    ArrayList<Sender> sl = commandWrapper.scanChannels();
+                    if(!sl.isEmpty()){
+                        senderliste = sl;
+                    }else{
+                        //Something is really wrong.
+                        throw new JSONException("Senderliste leer");
+                    }
+
+                }catch (JSONException | IOException e){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),"Kann nicht mit Fernseher verbinden.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    Log.e("Senderscan", e.getMessage());
+                }
                 return null;
             }
         }.execute();
@@ -112,7 +143,7 @@ public class SenderlisteActivity extends AppCompatActivity {
     }
 
     public void onDeleteRowButtonClicked(View v){
-        Toast.makeText(this, "Clicked some Delete Button", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Clicked some Delete Button", Toast.LENGTH_SHORT).show();
         final int position = sender.getPositionForView((View) v.getParent());
         senderliste.remove(position);
         senderAdapter.notifyDataSetChanged();

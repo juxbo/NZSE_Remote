@@ -3,6 +3,9 @@ package remote.js.nzse.hda.makeremotesgreatagain;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +28,7 @@ import java.util.List;
 
 public class Fernbedienung extends AppCompatActivity {
 
-    public static final String IP_ADRESS = "192.168.178.123";
+    public static final String IP_ADRESS = "192.168.178.43";
     private static final int SPULEN_BY = 10;
     boolean on;
     private SharedPreferences prefs = null;
@@ -34,7 +37,7 @@ public class Fernbedienung extends AppCompatActivity {
     private boolean muted;
     private int volCache = 50;
     private boolean paused;
-    private boolean blackbars = true;
+    private boolean blackbars = false;
     private Senderliste sliste;
     private HttpCommandWrapper cmd;
     private int lastChannelNr;
@@ -183,6 +186,20 @@ public class Fernbedienung extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_fernbedienung, menu);
         return true;
     }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(on){
+            Drawable yourdrawable = menu.getItem(0).getIcon(); // change 0 with 1,2 ...
+            yourdrawable.mutate();
+            yourdrawable.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        }
+        if(!blackbars){
+            Drawable yourdrawable = menu.getItem(1).getIcon(); // change 0 with 1,2 ...
+            yourdrawable.mutate();
+            yourdrawable.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        }
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -194,23 +211,23 @@ public class Fernbedienung extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_changeAspectRatio:
-                Toast.makeText(this, "Change aspect ratio", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Change aspect ratio", Toast.LENGTH_SHORT).show();
                 blackbars = !blackbars;
                 cmd.showBlackBars(blackbars);
                 break;
             case R.id.action_changeRole:
-                Toast.makeText(this, "Change role", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Change role", Toast.LENGTH_SHORT).show();
                 showChangeRoleSpinner();
                 break;
             case R.id.action_openSenderliste:
-                Toast.makeText(this, "Open Senderliste", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Open Senderliste", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), SenderlisteActivity.class);
                 intent.putExtra("sliste", (ArrayList) sliste.getSender());
                 startActivity(intent);
                 break;
             case R.id.action_onOff:
                 on = !on;
-                Toast.makeText(this, "TV " + (on ? "On" : "Off"), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "TV " + (on ? "On" : "Off"), Toast.LENGTH_SHORT).show();
 
                 if (on)
                     cmd.setStandBy(true);
@@ -221,7 +238,7 @@ public class Fernbedienung extends AppCompatActivity {
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 break;
         }
-
+        invalidateOptionsMenu();
         return super.onOptionsItemSelected(item);
     }
 
@@ -264,14 +281,14 @@ public class Fernbedienung extends AppCompatActivity {
 
     public void playButtonPressed(View v) {
         if (paused) {
-            Toast.makeText(this, "Resuming", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Resuming", Toast.LENGTH_SHORT).show();
             ((ImageButton) findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause));
             cmd.play(calculateOffset(spulenOffset));
             ffBtn.setEnabled(false);
             rewindBtn.setEnabled(false);
             paused = false;
         } else {
-            Toast.makeText(this, "Pausing", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Pausing", Toast.LENGTH_SHORT).show();
             ((ImageButton) findViewById(R.id.button_play)).setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.play));
             cmd.pause();
             timePaused = System.currentTimeMillis();
@@ -283,7 +300,7 @@ public class Fernbedienung extends AppCompatActivity {
     public void ffButtonPressed(View v) {
         if (calculateOffset(spulenOffset) > SPULEN_BY) {
             spulenOffset -= SPULEN_BY;
-            Toast.makeText(this, "-" + SPULEN_BY + " => Neuer Offset: " + calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "-" + SPULEN_BY + " => Neuer Offset: " + calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
             if (calculateOffset(spulenOffset) >= SPULEN_BY) {
                 ffBtn.setEnabled(false);
             }
@@ -296,7 +313,7 @@ public class Fernbedienung extends AppCompatActivity {
     public void rewindButtonPressed(View v) {
         if (calculateOffset(spulenOffset) < calculateOffset(SPULEN_BY)) {
             spulenOffset += SPULEN_BY;
-            Toast.makeText(this, "+" + SPULEN_BY + " => Neuer Offset: " + calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "+" + SPULEN_BY + " => Neuer Offset: " + calculateOffset(spulenOffset), Toast.LENGTH_SHORT).show();
             if (calculateOffset(spulenOffset) < calculateOffset(0)) {
                 rewindBtn.setEnabled(false);
             }
@@ -311,7 +328,7 @@ public class Fernbedienung extends AppCompatActivity {
     }
 
     public void lastChannelButtonPressed(View v) {
-        Toast.makeText(this, "Last Channel", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Last Channel", Toast.LENGTH_SHORT).show();
         changeSender(-1);
 //        Not necessary after implementing the changeListener of sender spinner
 //        lastChannelNr--;
@@ -319,7 +336,7 @@ public class Fernbedienung extends AppCompatActivity {
     }
 
     public void nextChannelButtonPressed(View v) {
-        Toast.makeText(this, "Next Channel", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Next Channel", Toast.LENGTH_SHORT).show();
         changeSender(1);
 //        Not necessary after implementing the changeListener of sender spinner
 //        lastChannelNr++;
@@ -338,7 +355,7 @@ public class Fernbedienung extends AppCompatActivity {
     }
 
     public void muteButtonPressed(View v) {
-        Toast.makeText(this, "Mute pressed", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Mute pressed", Toast.LENGTH_SHORT).show();
         if (muted) {
             //Unmute
             vol.setEnabled(true);

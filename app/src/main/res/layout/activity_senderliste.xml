@@ -54,9 +54,9 @@ tools:context="remote.js.nzse.hda.makeremotesgreatagain.SenderlisteActivity">
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
-        <!--android:background="#CC3F3F3F"-->
-
+        android:gravity="center"
+        android:background="#CC3F3F3F"
+        >
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

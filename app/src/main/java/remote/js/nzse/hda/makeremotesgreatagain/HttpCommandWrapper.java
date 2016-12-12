@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Selim on 13.11.2016.
  */
 
-public class HttpCommandWrapper extends AsyncTask<String, Integer, JSONObject> {
+public class HttpCommandWrapper {
     private final String host;
     private final Context context;
 
@@ -28,90 +28,102 @@ public class HttpCommandWrapper extends AsyncTask<String, Integer, JSONObject> {
 
     public void setDebug(final boolean debug) {
         String param = "debug=" + (debug ? 1 : 0);
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void setVolume(final int value) {
         String param = "volume=" + value;
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void setChannelMain(final String channel) {
         String param = "channelMain=" + channel;
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void showBlackBars(final boolean show) {
         String param = "zoomMain=" + (show ? 1 : 0);
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void setPipEnabled(final boolean value) {
         String param = "showPip=" + (value ? 1 : 0);
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void setChannelPip(final String channel) {
         String param = "channelPip=" + channel;
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void showBlackBarsInPip(final boolean show) {
         String param = "zoomPip=" + (show ? 1 : 0);
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void pause() {
         String param = "timeShiftPause=";
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
     public void play(final long offset) {
         String param = "timeShiftPlay=" + offset;
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
-    public List<Sender> scanChannels() {
+    public ArrayList<Sender> scanChannels() throws JSONException, IOException {
         //@Selim: Pls fix I don't know how to Json
         String param = "scanChannels=";
-        List<Sender> toReturn = new ArrayList<>();
-        JSONObject senderJson = execute(param, 5000);
+        ArrayList<Sender> toReturn = new ArrayList<>();
+
+        JSONObject senderJson = executeHttpRequest(5000, param);
         if (senderJson != null) {
-            try {
-                JSONArray senderArray = senderJson.getJSONArray("channels");
-                if (senderArray != null) {
-                    for (int i = 0; i < senderArray.length(); i++) {
-                        JSONObject channelObject = senderArray.getJSONObject(i);
-                        toReturn.add(new Sender(channelObject.getString("channel"), channelObject.getString("program"), channelObject.getInt("quality"), channelObject.getInt("frequency"), channelObject.getString("provider")));
-                    }
+            JSONArray senderArray = senderJson.getJSONArray("channels");
+            if (senderArray != null) {
+                for (int i = 0; i < senderArray.length(); i++) {
+                    JSONObject channelObject = senderArray.getJSONObject(i);
+                    toReturn.add(new Sender(channelObject.getString("channel"), channelObject.getString("program"), channelObject.getInt("quality"), channelObject.getInt("frequency"), channelObject.getString("provider")));
                 }
-            } catch (JSONException e) {
-                Log.e("Senderliste", e.getMessage());
             }
         }
+
         return toReturn;
     }
 
     public void setStandBy(final boolean value) {
         String param = "standby=" + (value ? 1 : 0);
-        execute(param, 500);
+        executeAsync(500, param);
     }
 
-    private JSONObject execute(String param, int timeout) {
+    private void executeAsync(final int timeout, String param) {
+        new AsyncTask<String, Void, Void>() {
 
-        return doInBackground(param, String.valueOf(timeout));
+            @Override
+            protected void onPreExecute() {
+                //Empty
+            }
+
+            @Override
+            protected Void doInBackground(String... params) {
+                try {
+                    executeHttpRequest(timeout, params);
+                } catch (JSONException | IOException e) {
+//                    TODO: Find a way to throw this. It can only to be thrown from UI Thread
+//                    Toast.makeText(context, "Fehler beim Verbinden mit TV", Toast.LENGTH_LONG);
+                    Log.e("Fernbedienung", e.getMessage());
+                }
+                return null;
+            }
+        }.execute(param);
     }
 
-    @Override
-    protected JSONObject doInBackground(String... params) {
-        HttpRequest request = new HttpRequest(host, Integer.parseInt(params[1]), true);
-        JSONObject response = null;
-        try {
-            response = request.execute(params[0]);
-        } catch (JSONException | IOException e) {
-            Toast.makeText(context, "Fehler beim Verbinden mit TV", Toast.LENGTH_LONG);
-            Log.e("Fernbedienung", e.getMessage());
+    private JSONObject executeHttpRequest(int timeout, String... params) throws JSONException, IOException {
+        if (params.length < 1) {
+            //Fehler no params
+            return null;
         }
-        return response;
+        HttpRequest request = new HttpRequest(host, timeout, true);
+
+        return request.execute(params[0]);
     }
 }
