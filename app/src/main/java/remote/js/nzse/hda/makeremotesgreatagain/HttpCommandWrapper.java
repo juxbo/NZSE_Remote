@@ -2,6 +2,7 @@ package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,7 +12,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Selim on 13.11.2016.
@@ -105,12 +105,16 @@ public class HttpCommandWrapper {
 
             @Override
             protected Void doInBackground(String... params) {
+                Handler handler = new Handler(context.getMainLooper());
                 try {
                     executeHttpRequest(timeout, params);
                 } catch (JSONException | IOException e) {
-//                    TODO: Find a way to throw this. It can only to be thrown from UI Thread
-//                    Toast.makeText(context, "Fehler beim Verbinden mit TV", Toast.LENGTH_LONG);
                     Log.e("Fernbedienung", e.getMessage());
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Kann nicht mit TV verbinden.", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 return null;
             }

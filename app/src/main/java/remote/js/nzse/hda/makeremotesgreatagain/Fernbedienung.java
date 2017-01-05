@@ -124,6 +124,7 @@ public class Fernbedienung extends AppCompatActivity {
         cmd.setStandBy(false);
         cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
 
+        //TODO: Keep all data persistent!!
         rolle = getIntent().getIntExtra("rolle", 4);
         applyChangeRole(rolle);
     }
@@ -175,13 +176,11 @@ public class Fernbedienung extends AppCompatActivity {
             showChangeRoleSpinner();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
-        //TODO: Pretty much the only thing to do. Finish onResume and OnPause to save and get the data we need to save to enable smooth multitasking
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //TODO: Find out what to do here (See onResume)
     }
 
 
@@ -258,7 +257,6 @@ public class Fernbedienung extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO: Change this to correct roles. Hide the features a role shouldn't have
                 dialog.dismiss();
                 rolle = which;
                 applyChangeRole(rolle);
