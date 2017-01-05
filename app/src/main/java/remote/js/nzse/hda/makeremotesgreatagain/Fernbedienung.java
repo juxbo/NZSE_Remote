@@ -46,6 +46,7 @@ public class Fernbedienung extends AppCompatActivity {
     private int spulenOffset;
     private ImageButton ffBtn;
     private ImageButton rewindBtn;
+    private int rolle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class Fernbedienung extends AppCompatActivity {
 
         sender = (Spinner) findViewById(R.id.spinner_sender);
         sliste = new Senderliste();
+        sliste.addSender(new Sender(null, "Leer", 0, 0, null));
         List<Sender> slistFromIntent = (ArrayList<Sender>) getIntent().getSerializableExtra("sliste");
         if (slistFromIntent != null && !slistFromIntent.isEmpty()) {
             sliste.setSender(slistFromIntent);
@@ -121,6 +123,9 @@ public class Fernbedienung extends AppCompatActivity {
         cmd.setDebug(true);
         cmd.setStandBy(false);
         cmd.setChannelMain(sliste.findSenderByNumber(lastChannelNr).getChannel());
+
+        rolle = getIntent().getIntExtra("rolle", 4);
+        applyChangeRole(rolle);
     }
 
     private void setPipButtonsEnabled(final boolean enabled) {
@@ -223,6 +228,7 @@ public class Fernbedienung extends AppCompatActivity {
 //                Toast.makeText(this, "Open Senderliste", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), SenderlisteActivity.class);
                 intent.putExtra("sliste", (ArrayList) sliste.getSender());
+                intent.putExtra("rolle", rolle);
                 startActivity(intent);
                 break;
             case R.id.action_onOff:
@@ -254,29 +260,34 @@ public class Fernbedienung extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //TODO: Change this to correct roles. Hide the features a role shouldn't have
                 dialog.dismiss();
-                switch (which) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        //Rolle noob
-                        findViewById(R.id.pip).setVisibility(View.GONE);
-                        break;
-                    case 4:
-                    case 5:
-                        //Rolle pro
-                        findViewById(R.id.pip).setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        //Keine Rolle. Noob benutzen?
-                        findViewById(R.id.pip).setVisibility(View.GONE);
-                        break;
-                }
+                rolle = which;
+                applyChangeRole(rolle);
             }
 
         });
 
         b.show();
+    }
+
+    public void applyChangeRole(int which) {
+        switch (which) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                //Rolle noob
+                findViewById(R.id.pip).setVisibility(View.GONE);
+                break;
+            case 4:
+            case 5:
+                //Rolle pro
+                findViewById(R.id.pip).setVisibility(View.VISIBLE);
+                break;
+            default:
+                //Keine Rolle. Noob benutzen?
+                findViewById(R.id.pip).setVisibility(View.GONE);
+                break;
+        }
     }
 
     public void playButtonPressed(View v) {

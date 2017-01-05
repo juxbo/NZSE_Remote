@@ -12,7 +12,7 @@ public class Senderliste {
 
     public Senderliste() {
         sender = new ArrayList<>();
-        fillSenderListWithTestData();
+//        fillSenderListWithTestData();
     }
 
     private void fillSenderListWithTestData() {
@@ -26,6 +26,10 @@ public class Senderliste {
     public Sender findSenderByNumber(int nr){
         // This might be a bit confusing but it works ¯\_(ツ)_/¯
         return sender.get(nr%sender.size());
+    }
+
+    public void addSender(Sender send) {
+        sender.add(send);
     }
 
     public List<Sender> getSender() {

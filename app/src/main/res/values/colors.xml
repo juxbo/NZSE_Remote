@@ -5,4 +5,10 @@
     <color name="colorBorderBackground">#42a5f5</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorButton">#ffffff</color>
+    <!-- TODO: Find better colors.
+        <color name="colorPrimary">#2196F3</color>
+        <color name="colorPrimaryDark">#1976D2</color>
+        <color name="colorBorderBackground">#2196F3</color>
+        <color name="colorAccent">#FF4081</color>
+        <color name="colorButton">#ffffff</color> -->
 </resources>

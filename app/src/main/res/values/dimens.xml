@@ -4,6 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <item name="space_weight" format="float" type="dimen">0.03</item>
+    <dimen name="space_height">15dp</dimen>
+
+    <item name="space_weight" format="float" type="dimen">0.1</item>
 
 </resources>

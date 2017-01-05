@@ -1,7 +1,6 @@
 package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.content.Intent;
-import android.media.CamcorderProfile;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SenderlisteActivity extends AppCompatActivity {
 
@@ -26,6 +24,7 @@ public class SenderlisteActivity extends AppCompatActivity {
     private ListView sender;
     private ArrayAdapter senderAdapter;
     private boolean scanHappening;
+    private int rolle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +34,7 @@ public class SenderlisteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         senderliste=(ArrayList<Sender>)getIntent().getSerializableExtra("sliste");
+        rolle = getIntent().getIntExtra("rolle", 4);
 
         sender=(ListView) findViewById(R.id.listview_sender);
         this.senderAdapter = new ArrayAdapter(this,R.layout.custom_listview, R.id.listview_textView, senderliste);
@@ -46,9 +46,12 @@ public class SenderlisteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (!scanHappening) {
         Intent intent = new Intent(getApplicationContext(), Fernbedienung.class);
         intent.putExtra("sliste", senderliste);
+            intent.putExtra("rolle", rolle);
         startActivity(intent);
+        }
     }
 
     @Override
@@ -98,6 +101,7 @@ public class SenderlisteActivity extends AppCompatActivity {
                         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                         Intent intent = new Intent(getApplicationContext(), SenderlisteActivity.class);
                         intent.putExtra("sliste", senderliste);
+                        intent.putExtra("rolle", rolle);
                         finish();
                         startActivity(intent);
                     }
