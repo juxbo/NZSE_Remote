@@ -1,6 +1,7 @@
 package remote.js.nzse.hda.makeremotesgreatagain;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -91,6 +92,8 @@ public class SenderlisteActivity extends AppCompatActivity {
 
     private void scanChannels() {
         scanHappening=true;
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
         invalidateOptionsMenu();
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -104,6 +107,7 @@ public class SenderlisteActivity extends AppCompatActivity {
                         intent.putExtra("rolle", rolle);
                         finish();
                         startActivity(intent);
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                     }
                 });
             }
