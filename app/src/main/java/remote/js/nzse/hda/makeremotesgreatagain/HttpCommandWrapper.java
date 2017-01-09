@@ -112,7 +112,7 @@ public class HttpCommandWrapper {
                     Log.e("Fernbedienung", e.getMessage());
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, "Kann nicht mit TV verbinden.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Kann nicht mit TV verbinden.", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

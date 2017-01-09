@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Fernbedienung extends AppCompatActivity {
 
-    public static final String IP_ADRESS = "192.168.178.43";
+    public static final String IP_ADRESS = "192.168.178.123";
     private static final int SPULEN_BY = 10;
     boolean on;
     private SharedPreferences prefs = null;
@@ -130,7 +130,7 @@ public class Fernbedienung extends AppCompatActivity {
     }
 
     private void setPipButtonsEnabled(final boolean enabled) {
-        pipChannelNr = 0;
+        pipChannelNr = prefs.getInt("pipChannel", lastChannelNr);
         if (enabled) {
             findViewById(R.id.layout_mainPip).setVisibility(View.VISIBLE);
             findViewById(R.id.layout_pipSwap).setVisibility(View.VISIBLE);
@@ -158,6 +158,7 @@ public class Fernbedienung extends AppCompatActivity {
     public void pipNextChannelButtonPressed(View v) {
         pipChannelNr++;
         cmd.setChannelPip(sliste.findSenderByNumber(pipChannelNr).getChannel());
+        prefs.edit().putInt("pipChannel", pipChannelNr).commit();
     }
 
     public void pipLastChannelButtonPressed(View v) {
@@ -166,6 +167,7 @@ public class Fernbedienung extends AppCompatActivity {
             pipChannelNr = sliste.getSender().size();
         }
         cmd.setChannelPip(sliste.findSenderByNumber(pipChannelNr).getChannel());
+        prefs.edit().putInt("pipChannel", pipChannelNr).commit();
     }
 
     @Override
@@ -176,6 +178,8 @@ public class Fernbedienung extends AppCompatActivity {
             showChangeRoleSpinner();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
+        pipChannelNr = prefs.getInt("pipChannel", lastChannelNr);
+        cmd.setChannelPip(sliste.findSenderByNumber(pipChannelNr).getChannel());
     }
 
     @Override
@@ -247,10 +251,10 @@ public class Fernbedienung extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //This might be a bit overkill.
-    //TODO: Fix bug: When you miss the Dialog it doesn't go into "default:" and instead just dismisses the dialog
     private void showChangeRoleSpinner() {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
+        // user HAS TO select a role now
+        b.setCancelable(false);
         b.setTitle("Was beschreibt sie am Besten?");
         String[] types = {"Kind", "Renter", "Hausfrau", "Fernsehnutzer", "Technik Profi", "Heimkino Enthusiast", "Ich weiß nicht"};
         b.setItems(types, new DialogInterface.OnClickListener() {
